@@ -13,6 +13,8 @@ def blob_trigger(myblob: func.InputStream, context: func.Context):
     
     sql_connection_string = os.environ.get(env_variable_name)
 
+    logging.info(f"DB string: {sql_connection_string}")
+
     logging.info("Environment Variables:")
     for key, value in os.environ.items():
         logging.info(f"{key} = {value}")
