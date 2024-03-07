@@ -1,20 +1,21 @@
 import azure.functions as func
 import logging
 import pyodbc
+import os
 
 app = func.FunctionApp()
 
 @app.blob_trigger(arg_name="myblob", path="blobforcsv/arriving/{name}.csv",
                                connection="accountforcsvtosql_STORAGE") 
 def blob_trigger(myblob: func.InputStream, context: func.Context):
+
+    env_variable_name = 'CONNECTIONSTRINGS:MYDBCONNECTIONSTRING'
     
-    sql_connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:serverforsqltolearn.database.windows.net,1433;Database=outputdatabase;Uid=bartix381;Pwd=Krzychui123;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    sql_connection_string = os.environ.get(env_variable_name)
     
     logging.info("Starting Azure Function execution")
 
     try:
-        # Your existing code here
-
 
         csv_content = myblob.read().decode('utf-8').splitlines()
     # Connect to SQL Database
@@ -35,7 +36,7 @@ def blob_trigger(myblob: func.InputStream, context: func.Context):
         conn.commit()
         conn.close()
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        logging.error(f"Error(manually): {str(e)}")
 
     # Log information about the processed blob
     logging.info(f"Python blob trigger function finished")
