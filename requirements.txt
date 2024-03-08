@@ -4,4 +4,4 @@
 
 azure-functions
 pyodbc
-System.Data.SqlClient
+mssql-cli
