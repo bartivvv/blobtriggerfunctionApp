@@ -1,6 +1,5 @@
 import azure.functions as func
 import logging
-import pyodbc
 import os
 import pymssql
 
@@ -10,15 +9,15 @@ app = func.FunctionApp()
                                connection="accountforcsvtosql_STORAGE") 
 def blob_trigger(myblob: func.InputStream, context: func.Context):
 
-    env_variable_name = 'SQLCONNSTR_MyDbConnectionString'
+    # env_variable_name = 'SQLCONNSTR_MyDbConnectionString'
     
-    sql_connection_string = os.environ.get(env_variable_name)
+    # sql_connection_string = os.environ.get(env_variable_name)
 
-    logging.info(f"DB string: {sql_connection_string}")
+    # logging.info(f"DB string: {sql_connection_string}")
 
-    logging.info("Environment Variables:")
-    for key, value in os.environ.items():
-        logging.info(f"{key} = {value}")
+    # logging.info("Environment Variables:")
+    # for key, value in os.environ.items():
+    #     logging.info(f"{key} = {value}")
     
     logging.info("Starting Azure Function execution")
 
