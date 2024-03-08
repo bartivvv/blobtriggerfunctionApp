@@ -9,7 +9,7 @@ app = func.FunctionApp()
                                connection="accountforcsvtosql_STORAGE") 
 def blob_trigger(myblob: func.InputStream, context: func.Context):
 
-    env_variable_name = 'MyDbConnectionString'
+    env_variable_name = 'SQLCONNSTR_MyDbConnectionString'
     
     sql_connection_string = os.environ.get(env_variable_name)
 
