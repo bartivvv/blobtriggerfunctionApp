@@ -2,6 +2,7 @@ import azure.functions as func
 import logging
 import pyodbc
 import os
+import pymssql
 
 app = func.FunctionApp()
 
@@ -25,7 +26,12 @@ def blob_trigger(myblob: func.InputStream, context: func.Context):
 
         csv_content = myblob.read().decode('utf-8').splitlines()
     # Connect to SQL Database
-        conn = pyodbc.connect(sql_connection_string)
+        server = 'serverforsqltolearn.database.windows.net'
+        database = 'outputdatabase'
+        username = 'bartix381'
+        password = 'Krzychui123'
+        conn = pymssql.connect(server=server, user=username, password=password, database=database)
+        # conn = pyodbc.connect(sql_connection_string)
         cursor = conn.cursor()
 
         # Assuming your CSV has headers that match the database table columns
