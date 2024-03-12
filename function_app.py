@@ -2,8 +2,24 @@ import azure.functions as func
 import logging
 import os
 import pymssql
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
 
 app = func.FunctionApp()
+
+# Define Key Vault and secret names
+secret_name_username = "passwordDB"
+secret_name_password = "usernameDB"
+
+# Create a SecretClient using the DefaultAzureCredential
+def get_key_vault_secret(secret_name):
+    key_vault_url = "https://keyvaultlearnblobtrigger.vault.azure.net/" # Replace with your Key Vault URL
+    credential = DefaultAzureCredential()
+
+    secret_client = SecretClient(vault_url=key_vault_url, credential=credential)
+    secret_value = secret_client.get_secret(secret_name).value
+
+    return secret_value
 
 @app.blob_trigger(arg_name="myblob", path="blobforcsv/arriving/{name}.csv",
                                connection="accountforcsvtosql_STORAGE") 
@@ -27,8 +43,8 @@ def blob_trigger(myblob: func.InputStream, context: func.Context):
     # Connect to SQL Database
         server = 'serverforsqltolearn.database.windows.net'
         database = 'outputdatabase'
-        username = 'bartix381'
-        password = 'Krzychui123'
+        username = get_key_vault_secret(secret_name_username)
+        password = get_key_vault_secret(secret_name_password)
         conn = pymssql.connect(server=server, user=username, password=password, database=database)
         # conn = pyodbc.connect(sql_connection_string)
         cursor = conn.cursor()
